@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sms-outbound-service
+  name: sms-outbound-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: sms-outbound-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.service.type: clusterip
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spring_ri_network: "true"
+        io.kompose.service: sms-outbound-service
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: http://discovery-service:8761/eureka
+        - name: logging.level.com.thinkmicroservices
+          value: INFO
+        - name: spring.cloud.config.uri
+          value: http://config-service:8888
+        - name: spring.main.banner-mode
+          value: '"off"'
+        - name: spring.profiles.active
+          value: dev, swagger, twilio
+        - name: spring.rabbitmq.host
+          value: rabbitmq
+        - name: spring.rabbitmq.password
+          value: microservices
+        - name: spring.rabbitmq.username
+          value: think
+        - name: twilio.accountSID
+          value: ACbc5aaad89084f9bea7df5a5f7c7d3f85
+        - name: twilio.authID
+          value: 0ec06706e651f0e825bbb026ccf24ac2
+        - name: eureka.instance.preferIpAddress
+          value: "true"
+        image: thinkmicroservices/outbound-sms-service:latest
+        imagePullPolicy: ""
+        name: sms-outbound-service
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

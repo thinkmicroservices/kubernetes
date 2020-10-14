@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: content-service
+  name: content-service
+   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: content-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.service.type: clusterip
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spring_ri_network: "true"
+        io.kompose.service: content-service
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: http://discovery-service:8761/eureka
+        - name: app.message
+          value: '"whats up"'
+        - name: spring.cloud.config.uri
+          value: http://config-service:8888
+        - name: spring.data.mongodb.database
+          value: content-service
+        - name: spring.data.mongodb.host
+          value: mongo-db-service
+        - name: spring.data.mongodb.port
+          value: "27017"
+        - name: spring.data.mongodb.repositories.enable
+          value: "true"
+        - name: spring.main.banner-mode
+          value: '"off"'
+        - name: eureka.instance.preferIpAddress
+          value: "true"
+
+        image: thinkmicroservices/content-service:latest
+        imagePullPolicy: ""
+        name: content-service
+        ports:
+        - containerPort: 4040
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

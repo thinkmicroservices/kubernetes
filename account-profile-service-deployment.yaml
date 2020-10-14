@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: account-profile-service
+  name: account-profile-service
+ 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: account-profile-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.service.type: clusterip
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spring_ri_network: "true"
+        io.kompose.service: account-profile-service
+    spec:
+      containers:
+      - env:
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: http://discovery-service:8761/eureka
+        - name: SPRING_RABBITMQ_HOST
+          value: rabbitmq
+        - name: logging.level.com.thinkmicroservices
+          value: TRACE
+        - name: spring.cloud.config.uri
+          value: http://config-service:8888
+        - name: spring.data.mongodb.database
+          value: account-profile
+        - name: spring.data.mongodb.host
+          value: mongo-db-service
+        - name: spring.data.mongodb.port
+          value: "27017"
+        - name: spring.data.mongodb.repositories.enable
+          value: "true"
+        - name: spring.main.banner-mode
+          value: '"off"'
+        - name: spring.profiles.active
+          value: dev, swagger
+        - name: eureka.instance.preferIpAddress
+          value: "true"
+        image: thinkmicroservices/account-profile-service:latest
+        imagePullPolicy: ""
+        name: account-profile-service
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

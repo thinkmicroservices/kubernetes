@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: discovery-service
+  name: discovery-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: discovery-service
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.service.type: clusterip
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/spring_ri_network: "true"
+        io.kompose.service: discovery-service
+    spec:
+      containers:
+      - env:
+        - name: spring.main.banner-mode
+          value: '"off"'
+        - name: spring.cloud.config.uri
+          value: http://config-service:8888
+
+        image: thinkmicroservices/discovery-service:latest
+        imagePullPolicy: ""
+        livenessProbe:
+          exec:
+            command:
+            - curl
+            - --fail
+            - --silent
+            - http://think:microservices@localhost:8761/actuator/health
+          failureThreshold: 10
+          periodSeconds: 30
+          timeoutSeconds: 30
+        name: discovery-service
+        ports:
+        - containerPort: 8761
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

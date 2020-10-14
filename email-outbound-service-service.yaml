@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: email-outbound-service
+  name: email-outbound-service
+spec:
+  ports:
+  - name: "6010"
+    port: 6010
+    targetPort: 8080
+  selector:
+    io.kompose.service: email-outbound-service
+  type: ClusterIP
+status:
+  loadBalancer: {}

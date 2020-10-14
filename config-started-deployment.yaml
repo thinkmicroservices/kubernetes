@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: config-started
+  name: config-started
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: config-started
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: config-started
+    spec:
+      containers:
+      - args:
+        - http://think:microservices@localhost:8888/actuator/health
+        image: dadarek/wait-for-dependencies
+        imagePullPolicy: ""
+        name: config-started
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

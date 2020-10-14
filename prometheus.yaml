@@ -1,0 +1,205 @@
+# think microservices global config
+global:
+  scrape_interval:     30s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 30s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+  ##################
+  # config service #
+  ##################
+
+  - job_name: "config-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['config-service:8888']
+
+
+  #####################
+  # discovery service #
+  #####################
+  - job_name: "discovery-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['discovery-service:8761']
+
+
+  ###################
+  # content service #
+  ###################
+  - job_name: "content-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['content-service:4040']
+
+
+   #######################
+   # api-gateway service #
+   #######################
+
+  - job_name: "api-gateway-service"
+    scheme: https
+    tls_config:
+      # ca_file: /think-microservices.cert
+      insecure_skip_verify: true
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['api-gateway-service:8443']
+
+
+  ########################
+  # notification service #
+  ########################
+
+  - job_name: "notification-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['notification-service:8080']
+
+  ########################
+  # notification service #
+  ########################
+
+  - job_name: "email-outbound-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['email-outbound-service:8080']
+
+  ########################
+  # sms-outbound service #
+  ########################
+
+  - job_name: "sms-outbound-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['sms-outbound-service:8080']
+
+
+  ###########################
+  # account-profile service #
+  ###########################
+
+  - job_name: "account-profile-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['account-profile-service:8080']
+
+  ###########################
+  # account-history service #
+  ###########################
+
+  - job_name: "account-history-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['account-history-service:8080']
+     
+  ##########################
+  # authentication service #
+  ##########################
+  - job_name: "authentication-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['auth-service:8080']
+
+
+  ##########################
+  # administration service #
+  ##########################
+
+  - job_name: "administration-service"
+    metrics_path: "/actuator/prometheus"
+    #basic_auth:
+    #  username: 'think'
+    #  password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['administration-service:8080']
+
+  #####################
+  # telemetry service #
+  #####################
+  - job_name: "telemetry-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['telemetry-service:8080']
+
+  ##########################
+  # peer-signaling service #
+  ##########################
+
+  - job_name: "peer-signaling-service"
+    metrics_path: "/actuator/prometheus"
+    basic_auth:
+      username: 'think'
+      password: 'microservices'
+    #scrape_interval: 5s
+    static_configs:
+    - targets: ['peer-signaling-service:8443']
+     

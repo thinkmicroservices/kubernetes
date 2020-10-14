@@ -1,0 +1,93 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    prometheus.yml: "# think microservices global config\nglobal:\n  scrape_interval:
+      \    30s # Set the scrape interval to every 15 seconds. Default is every 1 minute.\n
+      \ evaluation_interval: 30s # Evaluate rules every 15 seconds. The default is
+      every 1 minute.\n  # scrape_timeout is set to the global default (10s).\n\n#
+      Alertmanager configuration\nalerting:\n  alertmanagers:\n  - static_configs:\n
+      \   - targets:\n      # - alertmanager:9093\n\n# Load rules once and periodically
+      evaluate them according to the global 'evaluation_interval'.\nrule_files:\n
+      \ # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\n# A scrape configuration
+      containing exactly one endpoint to scrape:\n# Here it's Prometheus itself.\nscrape_configs:\n
+      \ # The job name is added as a label `job=<job_name>` to any timeseries scraped
+      from this config.\n  - job_name: 'prometheus'\n\n    # metrics_path defaults
+      to '/metrics'\n    # scheme defaults to 'http'.\n\n    static_configs:\n    -
+      targets: ['localhost:9090']\n\n  ##################\n  # config service #\n
+      \ ##################\n\n  - job_name: \"config-service\"\n    metrics_path:
+      \"/actuator/prometheus\"\n    basic_auth:\n      username: 'think'\n      password:
+      'microservices'\n    #scrape_interval: 5s\n    static_configs:\n    - targets:
+      ['config-service:8888']\n\n\n  #####################\n  # discovery service
+      #\n  #####################\n  - job_name: \"discovery-service\"\n    metrics_path:
+      \"/actuator/prometheus\"\n    basic_auth:\n      username: 'think'\n      password:
+      'microservices'\n    #scrape_interval: 5s\n    static_configs:\n    - targets:
+      ['discovery-service:8761']\n\n\n  ###################\n  # content service #\n
+      \ ###################\n  - job_name: \"content-service\"\n    metrics_path:
+      \"/actuator/prometheus\"\n    basic_auth:\n      username: 'think'\n      password:
+      'microservices'\n    #scrape_interval: 5s\n    static_configs:\n    - targets:
+      ['content-service:4040']\n\n\n   #######################\n   # api-gateway service
+      #\n   #######################\n\n  - job_name: \"api-gateway-service\"\n    scheme:
+      https\n    tls_config:\n      # ca_file: /think-microservices.cert\n      insecure_skip_verify:
+      true\n    metrics_path: \"/actuator/prometheus\"\n    basic_auth:\n      username:
+      'think'\n      password: 'microservices'\n    #scrape_interval: 5s\n    static_configs:\n
+      \   - targets: ['api-gateway-service:8443']\n\n\n  ########################\n
+      \ # notification service #\n  ########################\n\n  - job_name: \"notification-service\"\n
+      \   metrics_path: \"/actuator/prometheus\"\n    basic_auth:\n      username:
+      'think'\n      password: 'microservices'\n    #scrape_interval: 5s\n    static_configs:\n
+      \   - targets: ['notification-service:6005']\n\n  ########################\n
+      \ # notification service #\n  ########################\n\n  - job_name: \"email-outbound-service\"\n
+      \   metrics_path: \"/actuator/prometheus\"\n    basic_auth:\n      username:
+      'think'\n      password: 'microservices'\n    #scrape_interval: 5s\n    static_configs:\n
+      \   - targets: ['email-outbound-service:6010']\n\n  ########################\n
+      \ # sms-outbound service #\n  ########################\n\n  - job_name: \"sms-outbound-service\"\n
+      \   metrics_path: \"/actuator/prometheus\"\n    basic_auth:\n      username:
+      'think'\n      password: 'microservices'\n    #scrape_interval: 5s\n    static_configs:\n
+      \   - targets: ['sms-outbound-service:6020']\n\n\n  ###########################\n
+      \ # account-profile service #\n  ###########################\n\n  - job_name:
+      \"account-profile-service\"\n    metrics_path: \"/actuator/prometheus\"\n    basic_auth:\n
+      \     username: 'think'\n      password: 'microservices'\n    #scrape_interval:
+      5s\n    static_configs:\n    - targets: ['account-profile-service:5020']\n\n
+      \ ###########################\n  # account-history service #\n  ###########################\n\n
+      \ - job_name: \"account-history-service\"\n    metrics_path: \"/actuator/prometheus\"\n
+      \   basic_auth:\n      username: 'think'\n      password: 'microservices'\n
+      \   #scrape_interval: 5s\n    static_configs:\n    - targets: ['account-history-service:5010']\n
+      \    \n  ##########################\n  # authentication service #\n  ##########################\n
+      \ - job_name: \"authentication-service\"\n    metrics_path: \"/actuator/prometheus\"\n
+      \   basic_auth:\n      username: 'think'\n      password: 'microservices'\n
+      \   #scrape_interval: 5s\n    static_configs:\n    - targets: ['auth-service:7777']\n\n\n
+      \ ##########################\n  # administration service #\n  ##########################\n\n
+      \ - job_name: \"administration-service\"\n    metrics_path: \"/actuator/prometheus\"\n
+      \   #basic_auth:\n    #  username: 'think'\n    #  password: 'microservices'\n
+      \   #scrape_interval: 5s\n    static_configs:\n    - targets: ['administration-service:9999']\n\n
+      \ #####################\n  # telemetry service #\n  #####################\n
+      \ - job_name: \"telemetry-service\"\n    metrics_path: \"/actuator/prometheus\"\n
+      \   basic_auth:\n      username: 'think'\n      password: 'microservices'\n
+      \   #scrape_interval: 5s\n    static_configs:\n    - targets: ['telemetry-service:3500']\n\n
+      \ ##########################\n  # peer-signaling service #\n  ##########################\n\n
+      \ - job_name: \"peer-signaling-service\"\n    metrics_path: \"/actuator/prometheus\"\n
+      \   basic_auth:\n      username: 'think'\n      password: 'microservices'\n
+      \   #scrape_interval: 5s\n    static_configs:\n    - targets: ['peer-signaling-service:18443']\n
+      \    \n"
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2020-10-06T19:02:23Z"
+    managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:data:
+          .: {}
+          f:prometheus.yml: {}
+      manager: kubectl-create
+      operation: Update
+      time: "2020-10-06T19:02:23Z"
+    name: prometheus
+    #namespace: thinkmicroservices
+    resourceVersion: "455507"
+    selfLink: /api/v1/namespaces/default/configmaps/prometheus
+    uid: c4c7d385-56a6-485d-91e4-7b77a52d7e76
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

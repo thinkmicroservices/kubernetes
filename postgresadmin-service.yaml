@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml
+    kompose.service.type: clusterip
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: postgresadmin
+  name: postgresadmin
+spec:
+  ports:
+  - name: "1080"
+    port: 1080
+    targetPort: 80
+  selector:
+    io.kompose.service: postgresadmin
+  type: ClusterIP
+status:
+  loadBalancer: {}
